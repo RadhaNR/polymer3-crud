@@ -1,19 +1,31 @@
 {
+  "entrypoint": "index.html",
+  "shell": "src/user-app-app/user-app-app.js",
+  "fragments": [
+    "src/user-app-app/components/user-list.js",
+    "src/user-app-app/components/my-chart.js"
+  ],
+  "sources": [
+    "src/**/*",
+    "manifest/**",
+    "package.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "node_modules/@webcomponents/webcomponentsjs/**"
+  ],
+  "moduleResolution": "node",
   "npm": true,
-  "lint": {
-    "rules": [
-      "polymer-3"
-    ]
-  },
   "builds": [
     {
-      "preset": "es5-bundled"
+      "name": "es5prod",
+      "preset": "es5-bundled",
+      "addServiceWorker": true
     },
     {
-      "preset": "es6-bundled"
-    },
-    {
-      "preset": "es6-unbundled"
+      "name": "es6prod",
+      "preset": "es6-unbundled",
+      "addServiceWorker": true
     }
   ]
 }

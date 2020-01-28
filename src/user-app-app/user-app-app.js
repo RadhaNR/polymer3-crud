@@ -1,6 +1,6 @@
-import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
+import { html, PolymerElement } from '@polymer/polymer/polymer-element.js';
 import './components/user-list.js';
-
+import './components/my-chart.js';
 /**
  * @customElement
  * @polymer
@@ -8,8 +8,10 @@ import './components/user-list.js';
 class UserAppApp extends PolymerElement {
   static get template() {
     return html`
-    
+    <my-chart></my-chart>
+    <br/>
       <user-list></user-list>
+      
     `;
   }
   static get properties() {

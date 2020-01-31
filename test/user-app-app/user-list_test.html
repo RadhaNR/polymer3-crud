@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>user-app-app test</title>
+
+    <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script src="../../node_modules/chai/chai.js"></script>
+    <script src="../../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
+
+    <script type="module" src="../../src/user-app-app/components/user-list.js"></script>
+</head>
+
+<body>
+
+    <test-fixture id="UserListFixture">
+        <template>
+            <user-list></user-list>
+        </template>
+    </test-fixture>
+
+
+    <script>
+
+        describe('Given User-List Component:', function () {
+            var element;
+            var elementShadowRoot;
+
+            describe('When component is rendered', () => {
+
+                beforeEach(function () {
+                    element = fixture('UserListFixture');
+                    elementShadowRoot = element.shadowRoot;
+                });
+
+                it('Should instantiating the element with default properties works', function () {
+                    var elementHeader = elementShadowRoot.querySelector('h1');
+                    expect(elementHeader.innerHTML).to.equal('List of Users')
+                });
+
+                it('Should render paper-button', function () {
+                    var paperButton = elementShadowRoot.querySelector('paper-button');
+                    expect(paperButton.innerText).to.equal(('Add User').toUpperCase());
+                });
+
+                it('Should render h2 element', function () {
+                    var headingTwo = elementShadowRoot.querySelector('h2');
+                    expect(headingTwo.innerHTML).to.equal('User Information')
+                });
+
+                it('Should initialize the "action" props', function () {
+                    expect(element.action).to.equal('list')
+                });
+
+                it('Should render iron-ajax', function () {
+                    let ironAjax = elementShadowRoot.querySelector('iron-ajax');
+                    expect(ironAjax).to.exist;
+                });
+
+
+                describe('AND when add-user button is not triggered click event', function () {
+                    it('should NOT open the model dialog', sinon.test(function () {
+                        let addBtn = elementShadowRoot.querySelector('paper-dialog');
+                        expect(addBtn.getAttribute('aria-hidden')).to.equal('true')
+
+                    }));
+                });
+
+                describe('AND when userlist is empty', function () {
+                    beforeEach(function () {
+                        element.userList = [];
+                    });
+
+                    it('should render the correct number of rows', function (done) {
+                        flush(function () {
+                            let userItem = elementShadowRoot.querySelectorAll('.user-info');
+                            expect(userItem.length).to.equal(element.userList.length)
+                            done();
+                        });
+                    });
+
+                    it('should NOT render delete and edit button', function (done) {
+                        flush(function () {
+                            let deleteBtn = elementShadowRoot.querySelectorAll('.delete');
+                            let editBtn = elementShadowRoot.querySelectorAll('.edit');
+                            expect(element.userList.length).to.equal(0);
+                            expect(element.userList.length).to.equal(0);
+                            done();
+                        });
+                    });
+
+                });
+
+                describe('AND when add-user button is triggered click event', function () {
+                    let addBtn;
+                    beforeEach(function () {
+                        addBtn = elementShadowRoot.querySelector('#add');
+                        addBtn.click();
+                    });
+
+                
+                    it('should open the model dialog', function () {
+                        addBtn = elementShadowRoot.querySelector('paper-dialog');
+                        expect(addBtn.getAttribute('aria-hidden')).to.not.equal(true);
+                        expect(addBtn.getAttribute('aria-hidden')).to.equal(null);
+                    });
+
+                    it('should render name field', function () {
+                        let userName = elementShadowRoot.querySelector('#userName');
+                        expect(userName).to.exist;
+                    });
+
+                    it('should render sapId field', function () {
+                        let sapId = elementShadowRoot.querySelector('#sapId');
+                        expect(sapId).to.exist;
+                    });
+
+                    it('should render sapId field', function () {
+                        let submitAddUser = elementShadowRoot.querySelector('#submitAddUser');
+                        expect(submitAddUser).to.exist;
+                    });
+
+                    describe('AND when click on submit button', function () {
+                        let submitAddUser;
+                        let addUserSpy;
+                        beforeEach(function () {
+                            //submitAddUser = elementShadowRoot.querySelector('#submitAddUser');
+                            addUserSpy = sinon.spy();
+                            element.name = Math.random();
+                            element.sapId = Math.random();
+                            //submitAddUser.addEventListener('click', addUserSpy);
+                            //element._handleAddUser();
+                            //submitAddUser.click();
+                            debugger
+                        });
+
+                        it('should call _handleAddUser() method once', function () {
+                            expect(addUserSpy.callCount).to.be.equal(1)
+                        });
+
+                        it('should show toast', function () {
+                            let toast = elementShadowRoot.querySelector('#toast');
+                            expect(toast.getAttribute('aria-hidden')).to.be.equal('true');
+                        });
+                    });
+
+
+                });
+
+                xdescribe('AND when userlist is not empty', function () {
+                    beforeEach(function () {
+                        element.userList = [{
+                            name: "Radha",
+                            sapId: 23123
+                        }, {
+                            name: "Test",
+                            sapId: 777
+                        }];
+                    });
+
+                    it('should render the correct number of rows', function (done) {
+                        flush(function () {
+                            let userItem = elementShadowRoot.querySelectorAll('.user-info');
+                            expect(userItem.length).to.equal(element.userList.length)
+                            done();
+                        });
+                    });
+
+                    it('should render correct number of delete and edit button', function (done) {
+                        flush(function () {
+                            let deleteBtn = elementShadowRoot.querySelectorAll('.delete');
+                            let editBtn = elementShadowRoot.querySelectorAll('.edit');
+                            expect(element.userList.length).to.equal(deleteBtn.length)
+                            expect(element.userList.length).to.equal(editBtn.length)
+                            done();
+                        });
+                    });
+
+                    describe('AND when first delete button is clicked', function (done) {
+                        let deleteBtn, deleteSpy;
+                        beforeEach(function () {
+                            deleteSpy = sinon.spy();
+                        });
+
+                        it('should call delete "_handleDelete()"', function () {
+                            flush(function () {
+                                deleteBtn = elementShadowRoot.querySelectorAll('.delete')[0];
+                                deleteBtn.addEventListener('click', deleteSpy);
+                                expect(deleteSpy.callCount).to.be.equal(1)
+                                done();
+                            });
+
+                        });
+                    });
+
+                    describe('AND when first row edit button is clicked', function (done) {
+                        let editBtn, editSpy;
+                        beforeEach(function () {
+                            editSpy = sinon.spy();
+                        });
+
+                        it('should call delete "_handleDelete()"', function () {
+                            flush(function () {
+                                editBtn = elementShadowRoot.querySelectorAll('.edit')[0];
+                                editBtn.addEventListener('click', editSpy);
+                                expect(editSpy.callCount).to.be.equal(1);
+                                done();
+                            });
+
+                        });
+
+                        it('should show modal dialog', function () {
+                            flush(function () {
+                                editBtn = elementShadowRoot.querySelectorAll('.edit')[0];
+                                let dialog = elementShadowRoot.querySelector('paper-dialog');
+                                expect(addBtn.getAttribute('aria-hidden')).to.equal(true);
+                                done();
+                            });
+
+                        });
+                    });
+                });
+
+                // describe('AND when "_handleResponse()" is called with action="list"', function (done) {
+                //     let handleResSpy, data;
+                //     beforeEach(function () {
+                //         handleResSpy = sinon.spy();
+                //         element.action = 'list';
+                //         data = [{ name: 'Updated Name', sapId: 324323 }];
+                //         element._handleResponse({ detail: { response: data } });
+                //     });
+
+                //     it('should render the updated "userlist" props', function () {
+                //         flush(function () {
+                //            expect(element.userList.length).to.be.equal(data.length);
+                //             done();
+                //         });
+                //     });
+
+                  
+                // });
+
+            });
+
+        });
+    </script>
+
+
+</body>
+
+</html>

@@ -27,10 +27,47 @@ class UserAppApp extends PolymerElement {
   static get template() {
     return html`
     <style>
-    
+    :host {
+      --app-primary-color: #4285f4;
+      --app-secondary-color: black;
+
+      display: block;
+    }
+
+    app-drawer-layout:not([narrow]) [drawer-toggle] {
+      display: none;
+    }
+
+    app-header {
+      color: #fff;
+      background-color: var(--app-primary-color);
+    }
+
+    app-header paper-icon-button {
+      --paper-icon-button-ink-color: white;
+    }
+
+    .drawer-list {
+      margin: 0 20px;
+    }
+
+    .drawer-list a {
+      display: block;
+      padding: 0 16px;
+      text-decoration: none;
+      color: var(--app-secondary-color);
+      line-height: 40px;
+    }
+
+    .drawer-list a.iron-selected {
+      color: black;
+      font-weight: bold;
+    }
+
+  
   </style>
 
-  <app-location route="{{route}}" url-space-regex="^[[rootPath]]">
+  <app-location route="{{route}}" url-space-regex="^[[rootPath]]" use-hash-as-path>
   </app-location>
 
   <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
@@ -41,8 +78,8 @@ class UserAppApp extends PolymerElement {
   <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
     <app-toolbar>Menu</app-toolbar>
     <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-      <a name="user" href="[[rootPath]]user">View One</a>
-      <a name="chart" href="[[rootPath]]chart">View Two</a>
+      <a name="user" href="#[[rootPath]]user">View One</a>
+      <a name="chart" href="#[[rootPath]]chart">View Two</a>
     </iron-selector>
   </app-drawer>
 

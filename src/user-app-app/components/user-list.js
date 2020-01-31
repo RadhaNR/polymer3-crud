@@ -8,29 +8,36 @@ import '@polymer/paper-toast/paper-toast.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 //import '@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js';
+import '@polymer/neon-animation/animations/scale-down-animation.js';
+import '@polymer/neon-animation/animations/scale-up-animation.js';
+import '@polymer/neon-animation/animations/fade-out-animation';
 
-import './shared/smart-dialog.js';
 
 class UserList extends PolymerElement {
 
     static get template() {
         return html`
-
-        <paper-button raised on-click="_addUser"><iron-icon icon="add"></iron-icon>Add User</paper-button>
-
+        <style>
+        paper-toast {
+            width: 300px;
+            margin-left: calc(50vw - 150px);
+        }
+        </style>
+        <paper-button raised on-click="_addUser" id="add"><iron-icon icon="add"></iron-icon>Add User</paper-button>
+        <h1>List of Users</h1>
         <table>
         <thead>
             <tr><td>NO</td><td>User Name</td><td>SapId</td><td>Action</td></tr>
         </thead>
         <tbody>
             <template is="dom-repeat" items={{userList}}>
-                <tr>
+                <tr class="user-info">
                     <td>{{_getIndex(index)}}</td>
                     <td>{{item.name}}</td>
                     <td>{{item.sapId}}</td>
                     <td>
-                        <iron-icon icon="delete" on-click="_handleDelete"></iron-icon>
-                        <iron-icon icon="create" on-click="_handleEdit"></iron-icon>
+                        <iron-icon icon="delete" on-click="_handleDelete" class="delete"></iron-icon>
+                        <iron-icon icon="create" on-click="_handleEdit" class="edit"></iron-icon>
                     </td>
                 </tr>
             </template>
@@ -42,14 +49,14 @@ class UserList extends PolymerElement {
         debounce-duration="300"
         content-type="application/json"></iron-ajax>
 
-        <paper-dialog id="addUser" entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+        <paper-dialog id="addUser" entry-animation="scale-up-animation" exit-animation="fade-out-animation" >
         <h2>User Information</h2>
         <paper-dialog-scrollable>
             <iron-form id="addUserForm">
                 <form>
-                    <paper-input label="User Name" required error-message="Enter User Name" value="{{name}}"></paper-input>
-                    <paper-input label="SapId" required error-message="Enter Sap Id" value={{sapId}}></paper-input>
-                    <paper-button raised on-click="_handleAddUser">Add User</paper-button>
+                    <paper-input label="User Name" required error-message="Enter User Name" value="{{name}}" id="userName"></paper-input>
+                    <paper-input label="SapId" required error-message="Enter Sap Id" value={{sapId}} id="sapId"></paper-input>
+                    <paper-button raised on-click="_handleAddUser" id="submitAddUser">Add User</paper-button>
                 </form>
             </iron-form>
             </paper-dialog-scrollable>
@@ -111,7 +118,7 @@ class UserList extends PolymerElement {
                 break;
             default: break;
         }
-        this.makeAjax(method,url, obj);
+        this.makeAjax(method, url, obj);
 
     }
     _handleDelete(event) {
@@ -124,7 +131,7 @@ class UserList extends PolymerElement {
     _handleEdit(event) {
         this.action = 'update-user';
         this.$.addUser.open();
-        const { name, sapId , id} = event.model.item;
+        const { name, sapId, id } = event.model.item;
         this.name = name;
         this.sapId = sapId;
         this.id = id;
@@ -132,7 +139,7 @@ class UserList extends PolymerElement {
         // this.makeAjax('put', `http://localhost:3000/users/${event.model.item.id}`, obj);
     }
     _handleResponse(event) {
-        console.log(event)
+        console.log(this.action, event.detail.response)
         switch (this.action) {
             case 'list': this.userList = event.detail.response;
                 break;

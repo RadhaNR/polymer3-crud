@@ -15,6 +15,9 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 
 import './components/user-list.js';
 import './components/my-chart.js';
+import './components/app-form.js';
+
+
 
 setPassiveTouchGestures(true);
 setRootPath(MyAppGlobals.rootPath);
@@ -23,10 +26,11 @@ setRootPath(MyAppGlobals.rootPath);
  * @customElement
  * @polymer
  */
-class UserAppApp extends PolymerElement {
+class UserApp extends PolymerElement {
   static get template() {
     return html`
-    <style>
+    
+    <style include="granite-bootstrap">
     :host {
       --app-primary-color: #4285f4;
       --app-secondary-color: black;
@@ -73,13 +77,17 @@ class UserAppApp extends PolymerElement {
   <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}">
   </app-route>
 
+ 
+
+
   <app-drawer-layout fullbleed="" narrow="{{narrow}}">
   <!-- Drawer content -->
   <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-    <app-toolbar>Menu</app-toolbar>
+    <app-toolbar class="btn btn-danger">Menu</app-toolbar>
     <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-      <a name="user" href="#[[rootPath]]user">View One</a>
-      <a name="chart" href="#[[rootPath]]chart">View Two</a>
+      <a name="user" href="#[[rootPath]]user">User List</a>
+      <a name="chart" href="#[[rootPath]]chart">Chart</a>
+      <a name="app-form" href="#[[rootPath]]app-form">app-form</a>
     </iron-selector>
   </app-drawer>
 
@@ -96,6 +104,7 @@ class UserAppApp extends PolymerElement {
     <iron-pages selected="[[page]]" attr-for-selected="name" role="main">
     <user-list name="user"></user-list>
     <my-chart name="chart"></my-chart>
+    <app-form name="app-form"></app-form>
       <my-404 name="not-found"></my-404>
     </iron-pages>
   </app-header-layout>
@@ -130,7 +139,7 @@ class UserAppApp extends PolymerElement {
     // Show 'view1' in that case. And if the page doesn't exist, show 'view404'.
     if (!page) {
       this.page = 'user';
-    } else if (['user', 'chart'].indexOf(page) !== -1) {
+    } else if (['user', 'chart', 'app-form'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'not-found';
@@ -154,7 +163,11 @@ class UserAppApp extends PolymerElement {
       case 'chart':
         import('./components/my-chart');
         break;
-    
+
+      case 'app-form':
+        import('./components/app-form');
+        break;
+        
       case 'not-found':
         import('./components/my-404.js');
         break;
@@ -162,4 +175,4 @@ class UserAppApp extends PolymerElement {
   }
 }
 
-window.customElements.define('user-app-app', UserAppApp);
+window.customElements.define('user-app', UserApp);

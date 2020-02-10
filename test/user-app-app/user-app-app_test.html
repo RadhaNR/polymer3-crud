@@ -15,24 +15,24 @@
     <script src="../../node_modules/chai/chai.js"></script>
     <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
 
-    <script type="module" src="../../src/user-app-app/user-app-app.js"></script>
+    <script type="module" src="../../src/user-app/user-app.js"></script>
   </head>
   <body>
 
     <test-fixture id="BasicTestFixture">
       <template>
-        <user-app-app></user-app-app>
+        <user-app></user-app>
       </template>
     </test-fixture>
 
     <test-fixture id="ChangedPropertyTestFixture">
       <template>
-        <user-app-app prop1="new-prop1"></user-app-app>
+        <user-app prop1="new-prop1"></user-app>
       </template>
     </test-fixture>
 
     <script>
-      suite('user-app-app', function() {
+      suite('user-app', function() {
 
         // test('instantiating the element with default properties works', function() {
         //   var element = fixture('BasicTestFixture');

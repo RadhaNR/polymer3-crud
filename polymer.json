@@ -1,9 +1,9 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/user-app-app/user-app-app.js",
+  "shell": "src/user-app/user-app.js",
   "fragments": [
-    "src/user-app-app/components/user-list.js",
-    "src/user-app-app/components/my-chart.js"
+    "src/user-app/components/user-list.js",
+    "src/user-app/components/my-chart.js"
   ],
   "sources": [
     "src/**/*",
@@ -19,19 +19,7 @@
   "npm": true,
   "builds": [
     {
-      "name": "es5prod",
-      "preset": "es5-bundled",
-      "addServiceWorker": true
-    },
-    {
-      "name": "es6unprod",
-      "preset": "es6-unbundled",
-      "addServiceWorker": true
-    },
-    {
-      "name": "es6prod",
-      "preset": "es6-bundled",
-      "addServiceWorker": true
+      "preset": "es6-unbundled"
     }
   ]
 }

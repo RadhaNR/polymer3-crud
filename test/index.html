@@ -16,9 +16,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
   <title>Tests</title>
-  <script>
-    window.MyAppGlobals = { rootPath: '/' };
+
+  window.MyAppGlobals = { rootPath: '/' };
   </script>
+ 
 
   <script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
   <script src="../node_modules/mocha/mocha.js"></script>
@@ -31,9 +32,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     WCT.loadSuites([
       // Load 'my-view1.html' test suite, using native shadow dom
-      './user-app-app/user-list_test.html?dom=shadow',
+      './user-app/user-list_test.html?dom=shadow',
       // Load 'my-view1.html' test suite, using shadydom
-      // 'my-view1.html?wc-shadydom=true',
+      './user-app/user-list_test.html?wc-shadydom=true',
+
+      './user-app/app-form.html?dom=shadow'
     ]);
   </script>
 </body>

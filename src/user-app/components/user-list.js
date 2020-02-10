@@ -11,38 +11,70 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/neon-animation/animations/scale-down-animation.js';
 import '@polymer/neon-animation/animations/scale-up-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation';
-
+import 'ag-grid-polymer';
 
 class UserList extends PolymerElement {
 
     static get template() {
         return html`
+        <link rel="stylesheet" href="../../../node_modules/ag-grid-community/dist/styles/ag-grid.css" />
+        <link rel="stylesheet" href="../../../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css" />
         <style>
         paper-toast {
             width: 300px;
             margin-left: calc(50vw - 150px);
         }
         </style>
-        <paper-button raised on-click="_addUser" id="add"><iron-icon icon="add"></iron-icon>Add User</paper-button>
+        
+
+        <!-- <paper-button raised on-click="_addUser" id="add"><iron-icon icon="add"></iron-icon>Add User</paper-button>
         <h1>List of Users</h1>
-        <table>
-        <thead>
-            <tr><td>NO</td><td>User Name</td><td>SapId</td><td>Action</td></tr>
-        </thead>
-        <tbody>
-            <template is="dom-repeat" items={{userList}}>
-                <tr class="user-info">
-                    <td>{{_getIndex(index)}}</td>
-                    <td>{{item.name}}</td>
-                    <td>{{item.sapId}}</td>
-                    <td>
-                        <iron-icon icon="delete" on-click="_handleDelete" class="delete"></iron-icon>
-                        <iron-icon icon="create" on-click="_handleEdit" class="edit"></iron-icon>
-                    </td>
-                </tr>
-            </template>
-        </tbody>
+       
+        <ag-grid-polymer style="width: 100%; height: 350px;"
+                         class="ag-theme-balham"
+                         rowData="{{userList}}"
+                         columnDefs="{{columnDefs}}"
+                         on-first-data-rendered="{{firstDataRendered}}"
+        ></ag-grid-polymer>-->
+
+
+
+
+
+
+        <table class="table table-condensed">
+            <thead>
+                <tr><td>NO</td><td>User Name</td><td>SapId</td><td>Action</td></tr>
+            </thead>
+            <tbody>
+                <template is="dom-repeat" items={{userList}}>
+                    <tr class="user-info">
+                        <td>{{_getIndex(index)}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.sapId}}</td>
+
+                        <td>
+                            <button on-click="_handleIncre" data-set$={{index}}>+</button>
+                            <span>{{item.quantity}}</span>
+                            <button on-click="_handleDec" data-set$={{index}}>-</button>
+                        </td>
+
+                        
+                    </tr>
+                </template>
+            </tbody>
         </table>
+        <paper-button on-click="_handleData">Submit</paper-button>
+
+
+
+
+
+
+
+
+
+
         <iron-ajax id="ajax"
         handle-as="json"
         on-response="_handleResponse"
@@ -92,7 +124,18 @@ class UserList extends PolymerElement {
     connectedCallback() {
         super.connectedCallback();
         this._getData();
+        this.columnDefs = [
+            { headerName: "Index", field: "index", sortable: true, filter: true },
+            { headerName: "Name", field: "name", sortable: true, filter: true },
+            { headerName: "sap Id", field: "sapId", sortable: true, filter: true },
+        ];
+
+
     }
+    firstDataRendered(params) {
+        params.api.sizeColumnsToFit()
+    }
+
     _getData() {
         this.makeAjax('get', 'http://localhost:3000/users', null)
     }
@@ -103,6 +146,39 @@ class UserList extends PolymerElement {
     _getIndex(index) {
         return index + 1;
     }
+
+
+    /**
+     * @description: When click on plus button, increment the quantity
+     * @param {Event} event 
+     */
+    _handleIncre(event) {
+        let { id } = event.model.item;
+        let index = event.target.dataset.set; // pass the index from template as data-set$
+        let data = this.userList.filter((item) => item.id === id); // find the object from array using index(line 139)
+        this.set(`userList.${index}.quantity`, data[0]['quantity'] ? data[0]['quantity'] + 1 : 1); // update the quantity
+    }
+    /**
+     * @description: When click on minus button, decrement the quantity
+     * @param {Event} event 
+     */
+    _handleDec(event) {
+        let { id } = event.model.item;
+        let index = event.target.dataset.set;// pass the index from template as data-set$
+        let data = this.userList.filter((item) => item.id === id);// find the object from array using index(line 149)
+        this.set(`userList.${index}.quantity`, data[0]['quantity'] > 1 ? data[0]['quantity'] - 1 : 0);// update the quantity
+    }
+    /**
+     * print or check the updated values in the array
+     */
+    _handleData() {
+        console.log(this.userList)
+    }
+
+
+
+    
+
     _handleAddUser() {
         let url = 'http://localhost:3000/users';
         // if (this.$.addUserForm.validate()) {

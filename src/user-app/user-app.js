@@ -146,9 +146,9 @@ class UserApp extends PolymerElement {
     }
 
     // Close a non-persistent drawer when the page & route are changed.
-    if (!this.$.drawer.persistent) {
-      this.$.drawer.close();
-    }
+    // if (!this.$.drawer.persistent) {
+    //   this.$.drawer.close();
+    // }
   }
 
   _pageChanged(page) {

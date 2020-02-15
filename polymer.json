@@ -3,7 +3,8 @@
   "shell": "src/user-app/user-app.js",
   "fragments": [
     "src/user-app/components/user-list.js",
-    "src/user-app/components/my-chart.js"
+    "src/user-app/components/my-chart.js",
+    "src/user-app/components/app-form.js"
   ],
   "sources": [
     "src/**/*",
@@ -13,13 +14,15 @@
   "extraDependencies": [
     "manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
-    "node_modules/web-animations-js/web-animations-next-lite.min.js"
+    "node_modules/web-animations-js/web-animations-next-lite.min.js",
+    "node_modules/ag-grid-community/**/*"
   ],
   "moduleResolution": "node",
   "npm": true,
   "builds": [
     {
-      "preset": "es6-unbundled"
+      "preset": "es6-unbundled",
+      "addServiceWorker": true
     }
   ]
 }

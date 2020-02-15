@@ -11,6 +11,7 @@ import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/neon-animation/animations/scale-down-animation.js';
 import '@polymer/neon-animation/animations/scale-up-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation';
+import '@polymer/app-route/app-location.js';
 import 'ag-grid-polymer';
 
 class UserList extends PolymerElement {
@@ -26,8 +27,9 @@ class UserList extends PolymerElement {
         }
         </style>
         
+        <app-location route="{{route}}"></app-location>
 
-        <!-- <paper-button raised on-click="_addUser" id="add"><iron-icon icon="add"></iron-icon>Add User</paper-button>
+        <!--<paper-button raised on-click="_addUser" id="add"><iron-icon icon="add"></iron-icon>Add User</paper-button>-->
         <h1>List of Users</h1>
        
         <ag-grid-polymer style="width: 100%; height: 350px;"
@@ -35,7 +37,7 @@ class UserList extends PolymerElement {
                          rowData="{{userList}}"
                          columnDefs="{{columnDefs}}"
                          on-first-data-rendered="{{firstDataRendered}}"
-        ></ag-grid-polymer>-->
+        ></ag-grid-polymer>
 
 
 
@@ -118,6 +120,9 @@ class UserList extends PolymerElement {
             },
             id: {
                 type: Number
+            },
+            routeData: {
+                type: Object
             }
         }
     }
@@ -172,12 +177,17 @@ class UserList extends PolymerElement {
      * print or check the updated values in the array
      */
     _handleData() {
-        console.log(this.userList)
+        console.log(this.userList);
+        // this.set('route.page', 'app-form');
+        //  this.set('routeData.path', 'app-form');
+        window.history.pushState({}, null, '#/app-form');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        // this.set('route.path', '/search/');
     }
 
 
 
-    
+
 
     _handleAddUser() {
         let url = 'http://localhost:3000/users';

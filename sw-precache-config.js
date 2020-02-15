@@ -1,13 +1,12 @@
 module.exports = {
-    staticFileGlobs: [
-      'src/**/*',
-      'manifest.json'
-    ],
-    runtimeCaching: [
-      {
-        urlPattern: /\/@webcomponents\/webcomponentsjs\//,
-        handler: 'fastest'
-      }
-    ]
-  };
-  
+  staticFileGlobs: [
+    '/index.html'
+  ],
+  navigateFallback: '/',
+  runtimeCaching: [
+    {
+      urlPattern: /\/@webcomponents\/webcomponentsjs\//,
+      handler: 'fastest'
+    }
+  ]
+};
